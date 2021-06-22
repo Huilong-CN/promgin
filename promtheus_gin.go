@@ -60,6 +60,5 @@ func init() {
 	prometheus.MustRegister(ginRequestCounter)
 	prometheus.MustRegister(ginRespAvgPerMintue)
 	prometheus.MustRegister(ginRespMaxPerMintue)
-	// http.Handle("/metrics", promhttp.Handler())
 	go cleaner()
 }

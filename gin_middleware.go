@@ -1,6 +1,7 @@
 package promgin
 
 import (
+	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -69,7 +70,7 @@ func Prometheus(c *gin.Context) {
 	labels := prometheus.Labels{
 		"method": c.Request.Method,
 		"uri":    uri,
-		"code":   c.Request.Response.Status,
+		"code":   strconv.Itoa(c.Writer.Status()),
 	}
 	ginHistogram.With(labels).Observe(float64(ms))
 	ginRequestCounter.With(labels).Inc()
