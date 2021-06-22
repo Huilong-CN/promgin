@@ -15,6 +15,7 @@ func Metrics() gin.HandlerFunc {
 }
 
 func UsePrometheus(engin *gin.Engine) {
+	engin.Use(Prometheus)
 	engin.GET("/healthy", Healthy)
 	engin.GET("/metrics", Metrics())
 	engin.POST("/healthy", Healthy)
