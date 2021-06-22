@@ -10,8 +10,8 @@ var ginLables = []string{"method", "uri", "code"}
 
 var ginHistogram = prometheus.NewHistogramVec(
 	prometheus.HistogramOpts{
-		Name:    "web_request_duration_seconds",
-		Help:    "web request duration distribution",
+		Name:    "gin_duration_millseconds",
+		Help:    "gin duration millseconds distribution",
 		Buckets: []float64{10, 50, 100, 200, 480, 1000, 2000, 5000},
 	},
 	ginLables,
@@ -19,12 +19,12 @@ var ginHistogram = prometheus.NewHistogramVec(
 
 var ginRequestCounter = prometheus.NewCounterVec(prometheus.CounterOpts{
 	Name: "gin_http_request_counter",
-	Help: "gin_http_request_counter",
+	Help: "gin http request counter",
 }, ginLables)
 
 var ginRespAvgPerMintue = prometheus.NewGaugeVec(prometheus.GaugeOpts{
 	Name: "gin_resp_time_avg_per_min",
-	Help: "gin_resp_time_avg_per_min",
+	Help: "gin resp time avg per min",
 }, ginLables)
 
 var ginRespMaxPerMintue = prometheus.NewGaugeVec(prometheus.GaugeOpts{
