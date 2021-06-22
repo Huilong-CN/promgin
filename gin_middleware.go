@@ -77,11 +77,6 @@ func Prometheus(c *gin.Context) {
 	ginRespMaxPerMintue.With(labels).Set(float64(stat.maxMs))
 }
 
-//Healthy http healty check
-func Healthy(c *gin.Context) {
-	c.String(200, "success")
-}
-
 func resetCache() {
 	statsCache = &StatsCache{&sync.Map{}}
 }
