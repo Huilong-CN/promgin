@@ -1,6 +1,8 @@
 package promgin
 
 import (
+	"github.com/ziipin-server/niuhe"
+
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
@@ -20,4 +22,12 @@ func UsePrometheus(engin *gin.Engine) {
 	engin.GET("/metrics", Metrics())
 	engin.POST("/healthy", Healthy)
 	engin.POST("/metrics", Metrics())
+}
+
+func niuhePrometheus(niuheSvr *niuhe.Server) {
+	niuheSvr.Use(Prometheus)
+	niuheSvr.GetGinEngine().GET("/healthy", Healthy)
+	niuheSvr.GetGinEngine().GET("/metrics", Metrics())
+	niuheSvr.GetGinEngine().POST("/healthy", Healthy)
+	niuheSvr.GetGinEngine().POST("/metrics", Metrics())
 }
