@@ -24,7 +24,8 @@ func UsePrometheus(engin *gin.Engine) {
 	engin.POST("/metrics", Metrics())
 }
 
-func niuhePrometheus(niuheSvr *niuhe.Server) {
+//NiuhePrometheus
+func NiuhePrometheus(niuheSvr *niuhe.Server) {
 	niuheSvr.Use(Prometheus)
 	niuheSvr.GetGinEngine().GET("/healthy", Healthy)
 	niuheSvr.GetGinEngine().GET("/metrics", Metrics())
