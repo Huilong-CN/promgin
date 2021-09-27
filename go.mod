@@ -1,4 +1,4 @@
-module github.com/Huilong-CN/promgin
+module github.com/huilong-cn/promgin
 
 go 1.14
 
