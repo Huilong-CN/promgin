@@ -40,6 +40,47 @@ func Prometheus(c *gin.Context) {
 	c.Next()
 	uri := c.Request.URL.Path
 	ms := int64(time.Now().UnixNano()-start) / int64(time.Millisecond)
+	PrometheusHelp(ms, uri, c.Request.Method, strconv.Itoa(c.Writer.Status()))
+	//stat, ok := statsCache.Get(uri)
+	//if !ok {
+	//	stat = &apistatic{
+	//		uri:     uri,
+	//		count:   1,
+	//		totalMs: ms,
+	//		maxMs:   ms,
+	//		minMs:   ms,
+	//		avgMs:   ms,
+	//	}
+	//	statsCache.Store(uri, stat)
+	//} else {
+	//	atomic.AddInt64(&stat.count, 1)
+	//	// stat.totalMs += ms
+	//	atomic.AddInt64(&stat.totalMs, ms)
+	//	if stat.maxMs < ms {
+	//		// stat.maxMs = ms
+	//		atomic.SwapInt64(&stat.maxMs, ms)
+	//	}
+	//	if stat.minMs > ms {
+	//		// stat.minMs = ms
+	//		atomic.SwapInt64(&stat.minMs, ms)
+	//	}
+	//	newAvg := stat.totalMs / stat.count
+	//	atomic.SwapInt64(&stat.avgMs, newAvg)
+	//}
+	//// GinHistogram.With()
+	//labels := prometheus.Labels{
+	//	"method": c.Request.Method,
+	//	"uri":    uri,
+	//	"code":   strconv.Itoa(c.Writer.Status()),
+	//}
+	//ginHistogram.With(labels).Observe(float64(ms))
+	//ginRequestCounter.With(labels).Inc()
+	//ginRespAvgPerMintue.With(labels).Set(float64(stat.avgMs))
+	//ginRespMaxPerMintue.With(labels).Set(float64(stat.maxMs))
+}
+
+//Prometheus API调用统计
+func PrometheusHelp(ms int64, uri, method, code string) {
 	stat, ok := statsCache.Get(uri)
 	if !ok {
 		stat = &apistatic{
@@ -68,9 +109,9 @@ func Prometheus(c *gin.Context) {
 	}
 	// GinHistogram.With()
 	labels := prometheus.Labels{
-		"method": c.Request.Method,
+		"method": method,
 		"uri":    uri,
-		"code":   strconv.Itoa(c.Writer.Status()),
+		"code":   code,
 	}
 	ginHistogram.With(labels).Observe(float64(ms))
 	ginRequestCounter.With(labels).Inc()
