@@ -1,13 +1,14 @@
 package promgin
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus"
+	"net/http"
 	"strconv"
 	"sync"
 	"sync/atomic"
 	"time"
-
-	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus"
+	"unicode/utf8"
 )
 
 type StatsCache struct {
@@ -34,11 +35,15 @@ type apistatic struct {
 	avgMs   int64
 }
 
-//Prometheus API调用统计
+// Prometheus API调用统计
 func Prometheus(c *gin.Context) {
+	uri := c.Request.URL.Path
+	if !utf8.ValidString(uri) {
+		c.AbortWithStatus(http.StatusNotFound)
+		return
+	}
 	start := time.Now().UnixNano()
 	c.Next()
-	uri := c.Request.URL.Path
 	ms := int64(time.Now().UnixNano()-start) / int64(time.Millisecond)
 	PrometheusHelp(ms, uri, c.Request.Method, strconv.Itoa(c.Writer.Status()))
 	//stat, ok := statsCache.Get(uri)
@@ -79,7 +84,7 @@ func Prometheus(c *gin.Context) {
 	//ginRespMaxPerMintue.With(labels).Set(float64(stat.maxMs))
 }
 
-//Prometheus API调用统计
+// Prometheus API调用统计
 func PrometheusHelp(ms int64, uri, method, code string) {
 	stat, ok := statsCache.Get(uri)
 	if !ok {
